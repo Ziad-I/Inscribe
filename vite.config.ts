@@ -27,6 +27,7 @@ export default defineConfig(async () => ({
       // 3. tell vite to ignore watching `src-tauri`
       ignored: ["**/src-tauri/**"],
     },
+    envPrefix: ["VITE_", "TAURI_"],
     build: {
       // Tauri uses Chromium on Windows and WebKit on macOS and Linux
       target:
