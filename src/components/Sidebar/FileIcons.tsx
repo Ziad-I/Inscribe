@@ -1,3 +1,4 @@
+import folder from "@/assets/folder.png";
 import html from "@/assets/html.png";
 import css from "@/assets/css.png";
 import react from "@/assets/react.png";
@@ -16,6 +17,7 @@ interface Icon {
 }
 
 const icons: Icon = {
+  folder: folder,
   bin: binary,
   tsx: react,
   css: css,
@@ -38,8 +40,15 @@ const icons: Icon = {
   rs: rust,
 };
 
-export default function FileIcon(name: string) {
+interface FileIconProps {
+  name: string;
+}
+
+export default function FileIcon({ name }: FileIconProps) {
+  if (name == "folder")
+    return <img width={16} height={16} src={folder} alt="folder" />;
+
   const extension = name.split(".").pop()?.toLowerCase() || "bin";
   const icon = icons[extension];
-  return <img src={icon} alt={extension} />;
+  return <img width={16} height={16} src={icon} alt={extension} />;
 }
