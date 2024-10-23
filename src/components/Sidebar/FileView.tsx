@@ -27,8 +27,8 @@ export default function FileView({ files, visible, nested }: FileViewProps) {
 
   return (
     <div
-      className={`w-full ${visible ? "" : "hidden"}
-     ${nested ? "pl-4 relative border-l border-dotted border-stone-500" : ""}`}
+      className={`${visible ? "" : "hidden"}
+     ${nested ? "pl-1 ml-2 relative border-l border-dotted border-stone" : ""}`}
     >
       {files.map((file) => {
         const isSelected = file.id === selected;

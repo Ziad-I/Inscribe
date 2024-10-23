@@ -70,7 +70,7 @@ export default function FolderItem({ file, active }: FolderItemProps) {
         } flex items-center gap-2 px-2 py-0.5 text-stone cursor-pointer`}
       >
         <FileIcon name="folder" />
-        <div className="source-header flex items-center justify-between w-full group">
+        <div className="flex items-center justify-between w-full group">
           <span>{file.name}</span>
           <i
             onClick={() => setNewFile(true)}
