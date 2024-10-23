@@ -34,6 +34,12 @@ export default function FolderItem({ file, active }: FolderItemProps) {
     const filesList: IFile[] = [
       {
         id: nanoid(),
+        name: "folder",
+        type: "directory",
+        path: `${file.path}/folder`,
+      },
+      {
+        id: nanoid(),
         name: "index.js",
         type: "file",
         path: `${file.path}/index.js`,
@@ -53,16 +59,15 @@ export default function FolderItem({ file, active }: FolderItemProps) {
   };
   console.log(file.name, active);
   return (
-    <div>
+    <div className="flex flex-col">
+      {/* Icon and folder name in a flex row */}
       <div
         onClick={handleClick}
-        className={`
-        ${
+        className={`${
           active
             ? "bg-selection text-ivory"
             : "hover:bg-highlightBackground hover:text-ivory"
-        }
-        flex items-center gap-2 px-2 py-0.5 text-stone cursor-pointer`}
+        } flex items-center gap-2 px-2 py-0.5 text-stone cursor-pointer`}
       >
         <FileIcon name="folder" />
         <div className="source-header flex items-center justify-between w-full group">
@@ -74,8 +79,8 @@ export default function FolderItem({ file, active }: FolderItemProps) {
             +
           </i>
         </div>
-        <FileView visible={expanded} files={files} />
       </div>
+      {expanded && <FileView visible={expanded} files={files} nested={true} />}
     </div>
   );
 }

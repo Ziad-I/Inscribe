@@ -20,4 +20,22 @@
   --tooltip-background: #353a42;
   --selection: #3E4451;
   --cursor: #528bff;
+
+  
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #222426;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #465056;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
 }

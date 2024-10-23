@@ -81,8 +81,8 @@ export default function Sidebar() {
           {project}
         </span>
       </div>
-      <div className="px-2 overflow-y-auto h-[calc(100vh)]">
-        <FileView visible={true} files={files} />
+      <div className="px-2 overflow-y-auto h-screen">
+        <FileView visible={true} files={files} nested={false} />
       </div>
     </aside>
   );
