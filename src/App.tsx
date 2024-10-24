@@ -6,9 +6,9 @@ import { SourceProvider } from "./context/SourceContext";
 
 function App() {
   return (
-    <main className="flex m-0 bg-background">
+    <main className="flex bg-background">
       <SourceProvider>
-        <Sidebar></Sidebar>
+        <Sidebar />
       </SourceProvider>
     </main>
   );
