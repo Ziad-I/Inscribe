@@ -6,7 +6,7 @@ import { SourceProvider } from "./context/SourceContext";
 
 function App() {
   return (
-    <main className="flex bg-background">
+    <main className="flex h-screen bg-background overflow-hidden">
       <SourceProvider>
         <Sidebar />
       </SourceProvider>

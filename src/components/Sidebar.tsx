@@ -29,7 +29,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-60 shrink-0 h-full bg-darkBackground">
+    <aside className="w-60 shrink-0 h-full bg-darkBackground flex flex-col">
       <div className="flex flex-col items-center p-4 py-2.5">
         <button
           className="w-full text-left uppercase text-stone text-xs"
@@ -41,7 +41,7 @@ export default function Sidebar() {
           {project}
         </span>
       </div>
-      <div className="px-2 overflow-y-auto h-screen">
+      <div className="flex-grow pl-2 overflow-y-auto">
         <FileView visible={true} files={files} nested={false} />
       </div>
     </aside>
