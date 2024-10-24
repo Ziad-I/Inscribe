@@ -1,4 +1,4 @@
-use crate::models::{Error, FileInfo}; // Import from the models module
+use crate::models::{Error, FileInfo};
 
 #[tauri::command]
 pub fn greet(name: &str) -> String {
@@ -31,5 +31,6 @@ pub fn read_directory(path: &str) -> Result<Vec<FileInfo>, Error> {
         file_info_vec.push(file_info);
     }
 
+    file_info_vec.sort_by(|a, b| a.kind.cmp(&b.kind));
     Ok(file_info_vec)
 }
