@@ -35,19 +35,19 @@ export default function FolderItem({ file, active }: FolderItemProps) {
       {
         id: nanoid(),
         name: "folder",
-        type: "directory",
+        kind: "directory",
         path: `${file.path}/folder`,
       },
       {
         id: nanoid(),
         name: "index.js",
-        type: "file",
+        kind: "file",
         path: `${file.path}/index.js`,
       },
       {
         id: nanoid(),
         name: "README.md",
-        type: "file",
+        kind: "file",
         path: `${file.path}/README.md`,
       },
     ];

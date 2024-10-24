@@ -17,10 +17,10 @@ export default function FileView({ files, visible, nested }: FileViewProps) {
     e.preventDefault();
     e.stopPropagation();
 
-    if (file.type === "file") {
+    if (file.kind === "file") {
       setSelected(file.id);
       addOpenedFile(file.id);
-    } else if (file.type === "directory") {
+    } else if (file.kind === "directory") {
       // TODO: handle clicking on a directory
     }
   };
@@ -32,7 +32,7 @@ export default function FileView({ files, visible, nested }: FileViewProps) {
     >
       {files.map((file) => {
         const isSelected = file.id === selected;
-        return file.type === "directory" ? (
+        return file.kind === "directory" ? (
           <FolderItem key={file.id} file={file} active={isSelected} />
         ) : (
           <FileItem

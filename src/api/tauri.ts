@@ -10,7 +10,7 @@ export const readDirectory = async (dirPath: string): Promise<IFile[]> => {
     return fileInfoList.map((fileInfo) => ({
       id: nanoid(),
       name: fileInfo.name,
-      type: fileInfo.type === "directory" ? "directory" : "file",
+      kind: fileInfo.kind === "directory" ? "directory" : "file",
       path: fileInfo.path,
     }));
   } catch (error) {
