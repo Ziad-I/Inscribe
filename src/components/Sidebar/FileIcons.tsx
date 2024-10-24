@@ -48,7 +48,10 @@ export default function FileIcon({ name }: FileIconProps) {
   if (name == "folder")
     return <img width={16} height={16} src={folder} alt="folder" />;
 
-  const extension = name.split(".").pop()?.toLowerCase() || "bin";
+  const extension =
+    !name || !name.includes(".")
+      ? "bin"
+      : name.split(".").pop()?.toLowerCase() || "bin";
   const icon = icons[extension];
   return <img width={16} height={16} src={icon} alt={extension} />;
 }

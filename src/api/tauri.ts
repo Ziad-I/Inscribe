@@ -2,10 +2,18 @@ import { invoke } from "@tauri-apps/api/core";
 import { nanoid } from "nanoid";
 import { IFile } from "@/types/definitions";
 
+type FileInfo = {
+  name: string;
+  kind: "file" | "directory";
+  path: string;
+};
+
 // Function to read a directory with error handling
 export const readDirectory = async (dirPath: string): Promise<IFile[]> => {
   try {
-    const fileInfoList = await invoke<IFile[]>("read_directory", { dirPath });
+    const fileInfoList = await invoke<FileInfo[]>("read_directory", {
+      path: dirPath,
+    });
 
     return fileInfoList.map((fileInfo) => ({
       id: nanoid(),

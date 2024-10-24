@@ -30,32 +30,32 @@ export default function FolderItem({ file, active }: FolderItemProps) {
       return;
     }
 
-    // const filesList = await readDirectory(file.path);
-    const filesList: IFile[] = [
-      {
-        id: nanoid(),
-        name: "folder",
-        kind: "directory",
-        path: `${file.path}/folder`,
-      },
-      {
-        id: nanoid(),
-        name: "index.js",
-        kind: "file",
-        path: `${file.path}/index.js`,
-      },
-      {
-        id: nanoid(),
-        name: "README.md",
-        kind: "file",
-        path: `${file.path}/README.md`,
-      },
-    ];
-    if (filesList.length > 0) {
-      setFiles(filesList);
-      setLoaded(true);
-      setExpanded(true);
-    }
+    const filesList = await readDirectory(file.path);
+    // const filesList: IFile[] = [
+    //   {
+    //     id: nanoid(),
+    //     name: "folder",
+    //     kind: "directory",
+    //     path: `${file.path}/folder`,
+    //   },
+    //   {
+    //     id: nanoid(),
+    //     name: "index.js",
+    //     kind: "file",
+    //     path: `${file.path}/index.js`,
+    //   },
+    //   {
+    //     id: nanoid(),
+    //     name: "README.md",
+    //     kind: "file",
+    //     path: `${file.path}/README.md`,
+    //   },
+    // ];
+    if (!filesList) return;
+
+    setFiles(filesList);
+    setLoaded(true);
+    setExpanded(true);
   };
   console.log(file.name, active);
   return (
