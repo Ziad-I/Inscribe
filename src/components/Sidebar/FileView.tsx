@@ -11,19 +11,7 @@ interface FileViewProps {
 }
 
 export default function FileView({ files, visible, nested }: FileViewProps) {
-  const { selected, setSelected, addOpenedFile } = useSourceContext();
-
-  const handleClick = (e: MouseEvent<HTMLDivElement>, file: IFile) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (file.kind === "file") {
-      setSelected(file.id);
-      addOpenedFile(file.id);
-    } else if (file.kind === "directory") {
-      // TODO: handle clicking on a directory
-    }
-  };
+  const { selected } = useSourceContext();
 
   return (
     <div
@@ -35,12 +23,7 @@ export default function FileView({ files, visible, nested }: FileViewProps) {
         return file.kind === "directory" ? (
           <FolderItem key={file.id} file={file} active={isSelected} />
         ) : (
-          <FileItem
-            key={file.id}
-            file={file}
-            isSelected={isSelected}
-            handleClick={handleClick}
-          />
+          <FileItem key={file.id} file={file} isSelected={isSelected} />
         );
       })}
     </div>

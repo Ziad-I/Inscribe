@@ -1,18 +1,26 @@
 import { MouseEvent } from "react";
 import { IFile } from "@/types/definitions";
 import FileIcon from "./FileIcons";
+import { useSourceContext } from "@/context/SourceContext";
 
 interface FileItemProps {
   file: IFile;
   isSelected: boolean;
-  handleClick: (e: MouseEvent<HTMLDivElement>, file: IFile) => void;
 }
 
-export default function FileItem({
-  file,
-  isSelected,
-  handleClick,
-}: FileItemProps) {
+export default function FileItem({ file, isSelected }: FileItemProps) {
+  const { setSelected, addOpenedFile } = useSourceContext();
+
+  const handleClick = (e: MouseEvent<HTMLDivElement>, file: IFile) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (file.kind === "file") {
+      setSelected(file.id);
+      addOpenedFile(file.id);
+    }
+  };
+
   return (
     <div
       onClick={(e) => handleClick(e, file)}
