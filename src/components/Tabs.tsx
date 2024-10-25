@@ -35,7 +35,7 @@ export default function Tabs() {
             {/* Replace <i> with <button> */}
             <button
               onClick={(e) => closeFile(e, fileId)}
-              className="hover:text-red-400 ml-2 focus:outline-none"
+              className="hover:text-red-400 ml-2 hover:bg-background focus:outline-none px-1"
               aria-label={`Close ${file.name}`}
             >
               X
