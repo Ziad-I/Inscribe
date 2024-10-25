@@ -17,7 +17,7 @@ export default function Tabs() {
   return (
     <div
       ref={scrollRef}
-      className="flex items-center bg-darkBackground border-b border-stone divide-x divide-stone overflow-x-auto"
+      className="h-10 flex items-center bg-darkBackground border-b border-stone divide-x divide-stone overflow-x-auto"
     >
       {opened.map((fileId) => {
         const file = getFileEntry(fileId);

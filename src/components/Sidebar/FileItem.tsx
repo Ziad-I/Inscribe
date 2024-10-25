@@ -2,6 +2,7 @@ import { MouseEvent } from "react";
 import { IFile } from "@/types/definitions";
 import FileIcon from "./FileIcons";
 import { useSourceContext } from "@/context/SourceContext";
+import { addFileEntry } from "@/stores/FileStore";
 
 interface FileItemProps {
   file: IFile;
@@ -18,6 +19,7 @@ export default function FileItem({ file, isSelected }: FileItemProps) {
     if (file.kind === "file") {
       setSelected(file.id);
       addOpenedFile(file.id);
+      addFileEntry(file);
     }
   };
 

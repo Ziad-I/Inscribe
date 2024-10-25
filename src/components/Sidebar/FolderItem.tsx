@@ -23,6 +23,8 @@ export default function FolderItem({ file, active }: FolderItemProps) {
     e.preventDefault();
     e.stopPropagation();
 
+    // TODO: Might cause a problem later on i.e. switching editor view
+    // TODO: due to the selected context changes
     setSelected(file.id);
 
     if (loaded) {
@@ -37,10 +39,9 @@ export default function FolderItem({ file, active }: FolderItemProps) {
     setLoaded(true);
     setExpanded(true);
   };
-  console.log(file.name, active);
+
   return (
     <div className="flex flex-col">
-      {/* Icon and folder name in a flex row */}
       <div
         onClick={handleClick}
         className={`${
@@ -52,12 +53,16 @@ export default function FolderItem({ file, active }: FolderItemProps) {
         <FileIcon name="folder" />
         <div className="flex items-center justify-between w-full group">
           <span>{file.name}</span>
-          <i
-            onClick={() => setNewFile(true)}
-            className="invisible text-ivory group-hover:visible"
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setNewFile(true);
+            }}
+            className="invisible text-ivory group-hover:visible focus:outline-none"
+            aria-label="Add new file"
           >
             +
-          </i>
+          </button>
         </div>
       </div>
       {expanded && <FileView visible={expanded} files={files} nested={true} />}
