@@ -12,7 +12,7 @@ import { EditorTheme } from "./EditorTheme";
 import { IFile } from "@/types/definitions";
 
 import { bracketMatching, foldKeymap } from "@codemirror/language";
-import { autocompletion } from "@codemirror/autocomplete";
+import { autocompletion, acceptCompletion } from "@codemirror/autocomplete";
 import { searchKeymap } from "@codemirror/search";
 import { highlightActiveLine } from "@codemirror/view";
 
@@ -72,6 +72,13 @@ const createSaveCommand = (path: string) => ({
   preventDefault: true,
 });
 
+const createAcceptSuggestionCommand = () => {
+  return {
+    key: "Tab",
+    run: acceptCompletion,
+  };
+};
+
 export default function CodeEditor() {
   const { selected } = useSourceContext();
   const [isLoading, setIsLoading] = useState(true);
@@ -84,6 +91,11 @@ export default function CodeEditor() {
       const content = await readFile(fileEntry.path);
       const languageSupport = getLanguageSupport(fileEntry.name);
       const saveCommand = createSaveCommand(fileEntry.path);
+      const acceptSuggestionCommand = createAcceptSuggestionCommand();
+
+      if (!languageSupport) {
+        throw new Error(`Unsupported file extension: ${fileEntry.name}`);
+      }
 
       const state = EditorState.create({
         doc: content,
@@ -91,6 +103,7 @@ export default function CodeEditor() {
           basicSetup,
           EditorTheme,
           keymap.of([
+            acceptSuggestionCommand,
             saveCommand,
             indentWithTab,
             ...foldKeymap,
