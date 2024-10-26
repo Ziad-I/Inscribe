@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { LanguageSupport } from "@codemirror/language";
 import { languages } from "@codemirror/language-data";
 import { EditorState } from "@codemirror/state";
+import { keymap } from "@codemirror/view";
 import { EditorView, basicSetup } from "codemirror";
 import { useSourceContext } from "@/context/SourceContext";
 import { getFileEntry } from "@/stores/FileStore";
@@ -51,16 +52,16 @@ function getLanguageSupport(filename: string): LanguageSupport | null {
 const createSaveCommand = (path: string) => {
   return {
     key: "Ctrl-s",
-    run: async (view: EditorView) => {
-      try {
-        await writeFile(path, view.state.doc.toString());
-        // You might want to add some visual feedback that the file was saved
-        console.log("File saved successfully");
-        return true;
-      } catch (error) {
-        console.error("Failed to save file:", error);
-        return false;
-      }
+    run: (view: EditorView) => {
+      (async () => {
+        try {
+          await writeFile(path, view.state.doc.toString());
+          console.log("File saved successfully");
+        } catch (error) {
+          console.error("Failed to save file:", error);
+        }
+      })();
+      return true; // Return true synchronously
     },
     preventDefault: true,
   };
@@ -99,7 +100,7 @@ export default function Editor() {
           extensions: [
             basicSetup,
             EditorTheme,
-            // keymap.of([saveCommand]),
+            keymap.of([saveCommand]),
             ...(languageSupport ? [languageSupport] : []),
           ],
         });
