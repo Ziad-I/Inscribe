@@ -2,7 +2,7 @@
 
 **Inscribe** is a lightweight and user-friendly code editor built with Tauri, designed to enhance your coding experience. With a clean interface and essential features, Inscribe helps you focus on writing code effortlessly.
 
-![Inscribe Screenshot](screenshots/sc1)
+![Inscribe Screenshot](screenshots/sc1.png)
 
 
 ## Tech Stack
