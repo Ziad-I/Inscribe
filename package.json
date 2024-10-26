@@ -10,6 +10,8 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@codemirror/language": "^6.10.3",
+    "@codemirror/language-data": "^6.5.1",
     "@lezer/highlight": "^1.2.1",
     "@tauri-apps/api": "^2",
     "@tauri-apps/plugin-dialog": "^2.0.1",

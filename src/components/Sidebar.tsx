@@ -32,7 +32,7 @@ export default function Sidebar() {
     <aside className="w-60 shrink-0 h-full bg-darkBackground border-r border-stone flex flex-col">
       <div className="flex flex-col items-center p-4 py-2.5">
         <button
-          className="w-full text-left uppercase text-stone text-xs"
+          className="w-full text-left uppercase text-stone text-xs hover:bg-background focus:outline-none"
           onClick={loadProject}
         >
           File explorer
