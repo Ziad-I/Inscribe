@@ -48,6 +48,8 @@ export const oneDarkTheme = EditorView.theme(
     "&": {
       color: ivory,
       backgroundColor: background,
+      height: "100%",
+      overflow: "auto",
     },
 
     ".cm-content": {

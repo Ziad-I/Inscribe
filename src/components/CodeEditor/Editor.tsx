@@ -147,5 +147,5 @@ export default function Editor() {
     );
   }
 
-  return <div ref={containerRef} className="overflow-y-auto" />;
+  return <div ref={containerRef} className="h-full w-full overflow-hidden" />;
 }

@@ -14,7 +14,7 @@ function App() {
         <Sidebar />
         <div className="flex flex-col w-[calc(100%-15rem)] h-full">
           <Tabs />
-          <div className="">
+          <div className="h-[calc(100%-2.5rem)]">
             <Editor />
           </div>
         </div>
