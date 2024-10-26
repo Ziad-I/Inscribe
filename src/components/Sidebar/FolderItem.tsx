@@ -1,9 +1,7 @@
-import { nanoid } from "nanoid";
 import { useState, MouseEvent } from "react";
-import { readDirectory, writeFile } from "@/api/tauri";
+import { readDirectory } from "@/api/tauri";
 import { IFile } from "@/types/definitions";
 import FileIcon from "./FileIcons";
-import { useSourceContext } from "@/context/SourceContext";
 import FileView from "./FileView";
 
 interface FolderItemProps {
@@ -12,8 +10,6 @@ interface FolderItemProps {
 }
 
 export default function FolderItem({ file, active }: FolderItemProps) {
-  const { selected, setSelected } = useSourceContext();
-
   const [expanded, setExpanded] = useState(false);
   const [files, setFiles] = useState<IFile[]>([]);
   const [newFile, setNewFile] = useState(false);
@@ -22,10 +18,6 @@ export default function FolderItem({ file, active }: FolderItemProps) {
   const handleClick = async (e: MouseEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
-
-    // TODO: Might cause a problem later on i.e. switching editor view
-    // TODO: due to the selected context changes
-    setSelected(file.id);
 
     if (loaded) {
       setExpanded(!expanded);
