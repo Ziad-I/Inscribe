@@ -1,136 +1,150 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { LanguageSupport } from "@codemirror/language";
 import { languages } from "@codemirror/language-data";
 import { EditorState } from "@codemirror/state";
 import { keymap } from "@codemirror/view";
+import { indentWithTab } from "@codemirror/commands";
 import { EditorView, basicSetup } from "codemirror";
 import { useSourceContext } from "@/context/SourceContext";
 import { getFileEntry } from "@/stores/FileStore";
 import { readFile, writeFile } from "@/api/tauri";
 import { EditorTheme } from "./EditorTheme";
+import { IFile } from "@/types/definitions";
 
-const languageSupports: Record<string, LanguageSupport> = {};
+import { bracketMatching, foldKeymap } from "@codemirror/language";
+import { autocompletion } from "@codemirror/autocomplete";
+import { searchKeymap } from "@codemirror/search";
+import { highlightActiveLine } from "@codemirror/view";
 
-// Load all languages dynamically
-async function loadAllLanguages() {
+const EXTENSION_TO_LANGUAGE: Readonly<Record<string, string>> = {
+  js: "javascript",
+  ts: "typescript",
+  jsx: "javascript",
+  tsx: "typescript",
+  py: "python",
+  rs: "rust",
+  go: "go",
+  html: "html",
+  css: "css",
+  json: "json",
+  md: "markdown",
+};
+
+const languageSupports = new Map<string, LanguageSupport>();
+
+const loadAllLanguages = async (): Promise<void> => {
+  if (languageSupports.size > 0) return;
+
   const loadPromises = languages.map(async (lang) => {
     try {
       const languageSupport = await lang.load();
-      languageSupports[lang.name.toLowerCase()] = languageSupport;
+      languageSupports.set(lang.name.toLowerCase(), languageSupport);
     } catch (error) {
       console.error(`Failed to load language: ${lang.name}`, error);
+      throw new Error(`Language loading failed: ${lang.name}`);
     }
   });
 
-  await Promise.all(loadPromises);
-}
-
-// Get language support based on file extension
-function getLanguageSupport(filename: string): LanguageSupport | null {
-  const extension = filename.split(".").pop()?.toLowerCase() || "";
-
-  const extensionToLanguage: Record<string, string> = {
-    js: "javascript",
-    ts: "typescript",
-    jsx: "javascript",
-    tsx: "typescript",
-    py: "python",
-    rs: "rust",
-    go: "go",
-    html: "html",
-    css: "css",
-    json: "json",
-    md: "markdown",
-    // Add more mappings as needed
-  };
-
-  const languageName = extensionToLanguage[extension];
-  return languageSupports[languageName] || null;
-}
-
-// Create a save command
-const createSaveCommand = (path: string) => {
-  return {
-    key: "Ctrl-s",
-    run: (view: EditorView) => {
-      (async () => {
-        try {
-          await writeFile(path, view.state.doc.toString());
-          console.log("File saved successfully");
-        } catch (error) {
-          console.error("Failed to save file:", error);
-        }
-      })();
-      return true; // Return true synchronously
-    },
-    preventDefault: true,
-  };
+  await Promise.allSettled(loadPromises);
 };
+
+const getLanguageSupport = (filename: string): LanguageSupport | null => {
+  const extension = filename.split(".").pop()?.toLowerCase() || "";
+  const languageName = EXTENSION_TO_LANGUAGE[extension];
+  return languageSupports.get(languageName) || null;
+};
+
+const createSaveCommand = (path: string) => ({
+  key: "Ctrl-s",
+  mac: "Cmd-s",
+  run: (view: EditorView) => {
+    void (async () => {
+      try {
+        await writeFile(path, view.state.doc.toString());
+        //TODO: Could add a toast notification here
+      } catch (error) {
+        console.error("Failed to save file:", error);
+        //TODO: Could add error notification here
+      }
+    })();
+    return true;
+  },
+  preventDefault: true,
+});
 
 export default function Editor() {
   const { selected } = useSourceContext();
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const editorRef = useRef<EditorView | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    loadAllLanguages().then(() => setIsLoading(false));
-  }, []);
+  const initializeEditor = useCallback(async (fileEntry: IFile) => {
+    try {
+      const content = await readFile(fileEntry.path);
+      const languageSupport = getLanguageSupport(fileEntry.name);
+      const saveCommand = createSaveCommand(fileEntry.path);
 
-  useEffect(() => {
-    if (!selected || isLoading || !containerRef.current) return;
+      const state = EditorState.create({
+        doc: content,
+        extensions: [
+          basicSetup,
+          EditorTheme,
+          keymap.of([
+            saveCommand,
+            indentWithTab,
+            ...foldKeymap,
+            ...searchKeymap,
+          ]),
+          autocompletion(),
+          bracketMatching(),
+          highlightActiveLine(),
+          ...(languageSupport ? [languageSupport] : []),
+        ],
+      });
 
-    const fileEntry = getFileEntry(selected);
-    if (!fileEntry) return;
-
-    const loadAndSetupEditor = async () => {
-      try {
-        // Read file content
-        const content = await readFile(fileEntry.path);
-
-        // Get language support
-        const languageSupport = getLanguageSupport(fileEntry.name);
-
-        // Create save command
-        const saveCommand = createSaveCommand(fileEntry.path);
-
-        // Create editor state
-        const state = EditorState.create({
-          doc: content,
-          extensions: [
-            basicSetup,
-            EditorTheme,
-            keymap.of([saveCommand]),
-            ...(languageSupport ? [languageSupport] : []),
-          ],
-        });
-
-        // Destroy existing editor if it exists
-        if (editorRef.current) {
-          editorRef.current.destroy();
-        }
-
-        // Create new editor
-        const view = new EditorView({
-          state,
-          parent: containerRef.current || undefined,
-        });
-
-        editorRef.current = view;
-      } catch (error) {
-        console.error("Failed to load file:", error);
-      }
-    };
-
-    loadAndSetupEditor();
-
-    // Cleanup
-    return () => {
       if (editorRef.current) {
         editorRef.current.destroy();
       }
-    };
-  }, [selected, isLoading]);
+
+      if (!containerRef.current) {
+        throw new Error("Editor container not found");
+      }
+
+      editorRef.current = new EditorView({
+        state,
+        parent: containerRef.current,
+      });
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : "Failed to initialize editor";
+      setError(errorMessage);
+      console.error("Editor initialization failed:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadAllLanguages()
+      .then(() => setIsLoading(false))
+      .catch((error) => {
+        setError("Failed to load language support");
+        console.error("Language loading failed:", error);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!selected || isLoading) return;
+
+    const fileEntry = getFileEntry(selected);
+    if (!fileEntry) {
+      setError("Invalid file selected");
+      return;
+    }
+
+    initializeEditor(fileEntry);
+
+    return () => editorRef.current?.destroy();
+  }, [selected, isLoading, initializeEditor]);
 
   if (!selected) {
     return (
@@ -144,6 +158,14 @@ export default function Editor() {
     return (
       <div className="h-full w-full flex items-center justify-center text-stone">
         Loading...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="h-full w-full flex items-center justify-center text-red-500">
+        {error}
       </div>
     );
   }
