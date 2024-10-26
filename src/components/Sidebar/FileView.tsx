@@ -15,10 +15,9 @@ export default function FileView({ files, visible, nested }: FileViewProps) {
 
   return (
     <div
-      className={`max-h-full text-ellipsis overflow-x-hidden truncate  overflow-y-auto ${
-        visible ? "" : "hidden"
-      }
-     ${nested ? "pl-1 ml-2 relative border-l border-dotted border-stone" : ""}`}
+      className={`max-h-full overflow-y-auto ${visible ? "" : "hidden"}
+     ${nested ? "pl-1 ml-2 relative border-l border-dotted border-stone" : ""}
+     overflow-x-hidden whitespace-nowrap text-ellipsis`}
     >
       {files.map((file) => {
         const isSelected = file.id === selected;
