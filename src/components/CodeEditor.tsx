@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from "react";
+import { message } from "@tauri-apps/plugin-dialog";
 import { LanguageSupport } from "@codemirror/language";
 import { languages } from "@codemirror/language-data";
 import { EditorState } from "@codemirror/state";
@@ -41,7 +42,9 @@ const loadAllLanguages = async (): Promise<void> => {
       languageSupports.set(lang.name.toLowerCase(), languageSupport);
     } catch (error) {
       console.error(`Failed to load language: ${lang.name}`, error);
-      throw new Error(`Language loading failed: ${lang.name}`);
+      await message(`Language loading failed: ${lang.name}`, {
+        kind: "error",
+      });
     }
   });
 
@@ -50,7 +53,7 @@ const loadAllLanguages = async (): Promise<void> => {
 
 const getLanguageSupport = (filename: string): LanguageSupport | null => {
   const extension = filename.split(".").pop()?.toLowerCase() || "";
-  const languageName = EXTENSION_TO_LANGUAGE[extension];
+  const languageName = EXTENSION_TO_LANGUAGE[extension] || "markdown";
   return languageSupports.get(languageName) || null;
 };
 
@@ -64,7 +67,9 @@ const createSaveCommand = (path: string) => ({
         //TODO: Could add a toast notification here
       } catch (error) {
         console.error("Failed to save file:", error);
-        //TODO: Could add error notification here
+        await message("Failed to save file", {
+          kind: "error",
+        });
       }
     })();
     return true;
@@ -94,7 +99,9 @@ export default function CodeEditor() {
       const acceptSuggestionCommand = createAcceptSuggestionCommand();
 
       if (!languageSupport) {
-        throw new Error(`Unsupported file extension: ${fileEntry.name}`);
+        await message(`Unsupported file extension: ${fileEntry.name}`, {
+          kind: "error",
+        });
       }
 
       const state = EditorState.create({
@@ -121,7 +128,10 @@ export default function CodeEditor() {
       }
 
       if (!containerRef.current) {
-        throw new Error("Editor container not found");
+        await message("Editor container not found", {
+          kind: "error",
+        });
+        return;
       }
 
       editorRef.current = new EditorView({
