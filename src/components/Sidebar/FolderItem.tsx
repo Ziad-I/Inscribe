@@ -7,12 +7,16 @@ import FileView from "./FileView";
 interface FolderItemProps {
   file: IFile;
   active: boolean;
+  showContextMenu: (file: IFile) => void;
 }
 
-export default function FolderItem({ file, active }: FolderItemProps) {
+export default function FolderItem({
+  file,
+  active,
+  showContextMenu,
+}: FolderItemProps) {
   const [expanded, setExpanded] = useState(false);
   const [files, setFiles] = useState<IFile[]>([]);
-  const [newFile, setNewFile] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   const handleClick = async (e: MouseEvent<HTMLDivElement>) => {
@@ -36,6 +40,10 @@ export default function FolderItem({ file, active }: FolderItemProps) {
     <div className="flex flex-col">
       <div
         onClick={handleClick}
+        onContextMenu={(e) => {
+          e.preventDefault();
+          showContextMenu(file);
+        }}
         className={`${
           active
             ? "bg-selection text-ivory"
@@ -45,7 +53,7 @@ export default function FolderItem({ file, active }: FolderItemProps) {
         <FileIcon name="folder" />
         <div className="flex items-center justify-between w-full group">
           <span>{file.name}</span>
-          <button
+          {/* <button
             onClick={(e) => {
               e.stopPropagation();
               setNewFile(true);
@@ -54,7 +62,7 @@ export default function FolderItem({ file, active }: FolderItemProps) {
             aria-label="Add new file"
           >
             +
-          </button>
+          </button> */}
         </div>
       </div>
       {expanded && <FileView visible={expanded} files={files} nested={true} />}

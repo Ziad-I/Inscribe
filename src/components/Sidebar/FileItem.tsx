@@ -7,9 +7,14 @@ import { addFileEntry } from "@/stores/FileStore";
 interface FileItemProps {
   file: IFile;
   isSelected: boolean;
+  showContextMenu: (file: IFile) => void;
 }
 
-export default function FileItem({ file, isSelected }: FileItemProps) {
+export default function FileItem({
+  file,
+  isSelected,
+  showContextMenu,
+}: FileItemProps) {
   const { setSelected, addOpenedFile } = useSourceContext();
 
   const handleClick = (e: MouseEvent<HTMLDivElement>, file: IFile) => {
@@ -26,6 +31,10 @@ export default function FileItem({ file, isSelected }: FileItemProps) {
   return (
     <div
       onClick={(e) => handleClick(e, file)}
+      onContextMenu={(e) => {
+        e.preventDefault();
+        showContextMenu(file);
+      }}
       className={`
         ${
           isSelected
