@@ -79,7 +79,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ## TODO
 
 - [x] Create a custom context menu to allow the creation of folders/files and renaming.
-- [ ] replace the browser's native prompt() with something prettier.
+- [ ] Add delete folder/file to context menu
+- [ ] Replace the browser's native prompt() with something prettier.
 - [ ] Allow users to change the theme.
 - [ ] Add image preview.
 - [ ] Add an embedded terminal.
