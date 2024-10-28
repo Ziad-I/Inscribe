@@ -60,9 +60,10 @@ pub async fn read_directory(path: &str) -> Result<Vec<FileInfo>, Error> {
 }
 
 #[tauri::command]
-pub async fn create_directory(path: &str) -> Result<(), Error> {
-    let path = validate_path(path)?;
-    fs::create_dir_all(&path)?;
+pub async fn create_directory(parent: &str, name: &str) -> Result<(), Error> {
+    validate_path(parent)?;
+    let path_buf = PathBuf::from(parent).join(name);
+    fs::create_dir_all(&path_buf)?;
     Ok(())
 }
 
@@ -80,9 +81,10 @@ pub async fn read_file(path: &str) -> Result<String, Error> {
 }
 
 #[tauri::command]
-pub async fn create_file(path: &str) -> Result<(), Error> {
-    let path = validate_path(path)?;
-    fs::File::create(&path)?;
+pub async fn create_file(parent: &str, name: &str) -> Result<(), Error> {
+    validate_path(parent)?;
+    let path_buf = PathBuf::from(parent).join(name);
+    fs::File::create(&path_buf)?;
     Ok(())
 }
 

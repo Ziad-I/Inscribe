@@ -58,11 +58,14 @@ export async function readDirectory(dirPath: string): Promise<IFile[]> {
 }
 
 // Function to create a directory with error handling
-export async function createDirectory(path: string): Promise<void> {
+export async function createDirectory(
+  parent: string,
+  name: string
+): Promise<void> {
   try {
-    await invoke<void>("create_directory", { path });
+    await invoke<void>("create_directory", { parent, name });
   } catch (error) {
-    return handleTauriError(error, `create directory: ${path}`);
+    return handleTauriError(error, `create directory: ${name}`);
   }
 }
 
@@ -85,11 +88,11 @@ export async function readFile(path: string): Promise<string> {
 }
 
 // Function to create a file with error handling
-export async function createFile(path: string): Promise<void> {
+export async function createFile(parent: string, name: string): Promise<void> {
   try {
-    await invoke<void>("create_file", { path });
+    await invoke<void>("create_file", { parent, name });
   } catch (error) {
-    return handleTauriError(error, `create file: ${path}`);
+    return handleTauriError(error, `create file: ${name}`);
   }
 }
 

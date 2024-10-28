@@ -4,6 +4,8 @@ import FileItem from "./FileItem";
 import FolderItem from "./FolderItem";
 import { IFile } from "@/types/definitions";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
+import { createDirectory, createFile, rename } from "@/api/tauri";
+import { invoke } from "@tauri-apps/api/core";
 
 interface FileViewProps {
   files: IFile[];
@@ -21,9 +23,12 @@ export default function FileView({ files, visible, nested }: FileViewProps) {
         id: "new-folder",
         text: "New Folder",
         accelerator: "CmdOrCtrl+Shift+N",
-        action: () => {
-          console.log("Creating new folder: " + file.name);
-          // Add your folder creation logic here
+        action: async () => {
+          const folderName = prompt("Enter folder name:");
+          if (folderName) {
+            await createDirectory(file.path, folderName);
+            console.log("Created new folder:", folderName);
+          }
         },
       }),
       PredefinedMenuItem.new({ item: "Separator" }),
@@ -31,9 +36,12 @@ export default function FileView({ files, visible, nested }: FileViewProps) {
         id: "new-file",
         text: "New File",
         accelerator: "CmdOrCtrl+N",
-        action: () => {
-          console.log("Creating new file: " + file.name);
-          // Add your file creation logic here
+        action: async () => {
+          const fileName = prompt("Enter file name:");
+          if (fileName) {
+            await createFile(file.path, fileName);
+            console.log("Created new file:", fileName);
+          }
         },
       }),
       PredefinedMenuItem.new({ item: "Separator" }),
@@ -41,9 +49,13 @@ export default function FileView({ files, visible, nested }: FileViewProps) {
         id: "rename",
         text: "Rename",
         accelerator: "F2",
-        action: () => {
-          console.log("Renaming item: " + file.name);
-          // Add your rename logic here
+        action: async () => {
+          const newName = prompt("Enter new name:", file.name);
+          if (newName && newName !== file.name) {
+            const newPath = file.path.replace(file.name, newName);
+            await rename(file.path, newPath);
+            console.log("Renamed from", file.name, "to", newName);
+          }
         },
       }),
     ]);

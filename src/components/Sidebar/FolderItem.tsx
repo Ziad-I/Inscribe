@@ -53,16 +53,6 @@ export default function FolderItem({
         <FileIcon name="folder" />
         <div className="flex items-center justify-between w-full group">
           <span>{file.name}</span>
-          {/* <button
-            onClick={(e) => {
-              e.stopPropagation();
-              setNewFile(true);
-            }}
-            className="invisible text-ivory group-hover:visible focus:outline-none"
-            aria-label="Add new file"
-          >
-            +
-          </button> */}
         </div>
       </div>
       {expanded && <FileView visible={expanded} files={files} nested={true} />}
