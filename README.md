@@ -26,6 +26,8 @@
 - **Syntax Highlighting:** Easily read and understand your code with color-coded syntax.
 - **Tabs for Multiple Files:** Work on multiple files simultaneously with tabbed editing.
 - **Undo/Redo:** Quickly revert or reapply changes with undo and redo functionality.
+- **Create new File/Folder:** Create a new file or folder
+- **Rename files or folders:** Rename files or folders
 
 
 ## Installation
@@ -76,7 +78,8 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## TODO
 
-- [ ] Create a custom context menu to allow the creation of folders/files and renaming.
+- [x] Create a custom context menu to allow the creation of folders/files and renaming.
+- [ ] replace the browser's native prompt() with something prettier.
 - [ ] Allow users to change the theme.
 - [ ] Add image preview.
 - [ ] Add an embedded terminal.
