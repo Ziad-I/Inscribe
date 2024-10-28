@@ -3,10 +3,13 @@ import { IFile } from "@/types/definitions";
 import { open } from "@tauri-apps/plugin-dialog";
 import { readDirectory } from "@/api/tauri";
 import FileView from "@/components/Sidebar/FileView";
+import { useSourceContext } from "@/context/SourceContext";
+import { resetFileStore } from "@/stores/FileStore";
 
 export default function Sidebar() {
   const [project, setProject] = useState<string>("No Project Selected");
   const [files, setFiles] = useState<IFile[]>([]);
+  const { reset } = useSourceContext();
 
   const loadProject = async () => {
     console.log("Loading project");
@@ -26,6 +29,10 @@ export default function Sidebar() {
     if (!filesList) return;
 
     setFiles(filesList);
+
+    // Reset the source code editor content when a new project is loaded
+    reset();
+    resetFileStore();
   };
 
   return (

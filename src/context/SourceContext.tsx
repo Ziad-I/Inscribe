@@ -12,6 +12,7 @@ interface SourceContext {
   setSelected(id: string): void;
   addOpenedFile(id: string): void;
   removeOpenedFile(id: string): void;
+  reset(): void;
 }
 
 const SourceContext = createContext<SourceContext>({
@@ -20,6 +21,7 @@ const SourceContext = createContext<SourceContext>({
   setSelected: (id) => {},
   addOpenedFile: (id) => {},
   removeOpenedFile: (id) => {},
+  reset: () => {},
 });
 
 interface SourceProviderProps {
@@ -46,6 +48,11 @@ export const SourceProvider = ({ children }: SourceProviderProps) => {
     [opened]
   );
 
+  const reset = useCallback(() => {
+    setSelected("");
+    setOpened([]);
+  }, []);
+
   return (
     <SourceContext.Provider
       value={{
@@ -54,6 +61,7 @@ export const SourceProvider = ({ children }: SourceProviderProps) => {
         setSelected,
         addOpenedFile,
         removeOpenedFile,
+        reset,
       }}
     >
       {children}

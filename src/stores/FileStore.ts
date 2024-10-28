@@ -13,3 +13,9 @@ export const addFileEntry = (entry: IFile) => {
 export const getFileEntry = (id: string): IFile => {
   return entries[id];
 };
+
+export const resetFileStore = (): void => {
+  Object.keys(entries).forEach((key) => {
+    delete entries[key];
+  });
+};
