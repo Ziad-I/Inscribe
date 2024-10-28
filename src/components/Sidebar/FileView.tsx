@@ -4,7 +4,14 @@ import FileItem from "./FileItem";
 import FolderItem from "./FolderItem";
 import { IFile } from "@/types/definitions";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
-import { createDirectory, createFile, rename } from "@/api/tauri";
+import {
+  createDirectory,
+  createFile,
+  removeDirectory,
+  removeFile,
+  rename,
+} from "@/api/tauri";
+import { ask } from "@tauri-apps/plugin-dialog";
 
 interface FileViewProps {
   files: IFile[];
@@ -40,6 +47,27 @@ export default function FileView({ files, visible, nested }: FileViewProps) {
           if (fileName) {
             await createFile(file.path, fileName);
             console.log("Created new file:", fileName);
+          }
+        },
+      }),
+      PredefinedMenuItem.new({ item: "Separator" }),
+      MenuItem.new({
+        id: "delete",
+        text: "Delete",
+        accelerator: "CmdOrCtrl+delete",
+        action: async () => {
+          const type = file.kind === "file" ? "file" : "folder";
+          const confirmation = await ask(
+            `Are you sure you want to delete this ${type}?`,
+            { title: `Delete ${type}`, kind: "warning" }
+          );
+          if (confirmation) {
+            if (file.kind === "file") {
+              await removeFile(file.path);
+            } else {
+              await removeDirectory(file.path);
+            }
+            console.log("Deleted:", file.name);
           }
         },
       }),
