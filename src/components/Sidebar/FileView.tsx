@@ -5,7 +5,6 @@ import FolderItem from "./FolderItem";
 import { IFile } from "@/types/definitions";
 import { Menu, MenuItem, PredefinedMenuItem } from "@tauri-apps/api/menu";
 import { createDirectory, createFile, rename } from "@/api/tauri";
-import { invoke } from "@tauri-apps/api/core";
 
 interface FileViewProps {
   files: IFile[];

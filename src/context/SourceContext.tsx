@@ -18,9 +18,9 @@ interface SourceContext {
 const SourceContext = createContext<SourceContext>({
   selected: "",
   opened: [],
-  setSelected: (id) => {},
-  addOpenedFile: (id) => {},
-  removeOpenedFile: (id) => {},
+  setSelected: () => {},
+  addOpenedFile: () => {},
+  removeOpenedFile: () => {},
   reset: () => {},
 });
 

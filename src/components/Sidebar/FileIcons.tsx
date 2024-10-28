@@ -9,7 +9,7 @@ import git from "@/assets/git.png";
 import image from "@/assets/image.png";
 import nodejs from "@/assets/nodejs.png";
 import rust from "@/assets/rust.png";
-import json from "@/assets/json.png";
+// import json from "@/assets/json.png";
 import javascript from "@/assets/javascript.png";
 
 interface Icon {
